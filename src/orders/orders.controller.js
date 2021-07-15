@@ -70,7 +70,9 @@ const isOrderValid = (req, res, next) => {
 
 // orderStatus
 const orderStatus = (req, res, next) => {
-      const { orderId } = req.params;
+      const orderId = res.locals.orderId;
+      //   console.log(res.locals.orderId)
+      //             console.log(res.locals.foundOrder)
       //console.log(orderId);
       const { orderValid } = res.locals;
       //console.log("this is from orderStatus ", orderValid);
@@ -115,8 +117,10 @@ const read = (req, res, next) => {
 
 // CREATE
 const create = (req, res, next) => {
-      const { data: { deliverTo, mobileNumber, status, dishes } = {} } =
-            req.body;
+      const { deliverTo, mobileNumber, status, dishes } = res.locals.orderValid;
+      console.log(req.body.data);
+      //   res.locals.orderId
+      //             res.locals.foundOrder
       // create new order
       const newOrder = {
             id: nextId(),
@@ -134,7 +138,7 @@ const update = (req, res, next) => {
       const { foundOrder } = res.locals;
       //console.log(foundOrder);
       // get all propertys from req.body
-      const { data: { deliverTo, mobileNumber, dishes } = {} } = req.body;
+      const { deliverTo, mobileNumber, dishes } = res.locals.orderValid;
       // replace variables
       foundOrder.deliverTo = deliverTo;
       foundOrder.mobileNumber = mobileNumber;
