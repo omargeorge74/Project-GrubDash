@@ -7,8 +7,8 @@ const dishes = require(path.resolve("src/data/dishes-data"));
 const nextId = require("../utils/nextId");
 
 // TODO: Implement the /dishes handlers needed to make the tests pass
-
 // Validations
+
 // dishExist
 const dishExist = (req, res, next) => {
       const { dishId } = req.params;
@@ -28,7 +28,7 @@ const dishExist = (req, res, next) => {
 
 // isDishValid
 const isDishValid = (req, res, next) => {
-      const { dishId } = req.params;
+      const dishId = res.locals.dishId;
       //console.log(dishId);
       //destructure to validate each one
       const {
@@ -38,6 +38,8 @@ const isDishValid = (req, res, next) => {
             image_url = "",
       } = req.body.data;
 
+      //console.log(res.locals.foundDishId)
+      //console.log(req.body.data)
       if (!name.length) {
             next({
                   status: 400,
@@ -93,7 +95,9 @@ const list = (req, res, next) => {
 };
 // CREATE
 const create = (req, res, next) => {
-      const { data: { name, description, price, image_url } = {} } = req.body;
+      const { name, description, price, image_url } = res.locals.dishIsValid;
+      //   console.log(res.locals.foundId)
+      //   console.log(res.locals.dishIsValid)
       //console.log(name, description, price, image_url);
       const newDish = {
             id: nextId(),
@@ -114,12 +118,14 @@ const read = (req, res, next) => {
 };
 // UPDATE
 const update = (req, res, next) => {
-      const { dishId } = req.params;
+      //   console.log(res.locals.dishId)
+      //   console.log(res.locals.dishIsValid)
+      const dishId = res.locals.dishId;
       const foundDishId = dishes.find((dish) => dish.id === dishId);
       // body that will be replaced
       //console.log(foundDishId);
       // The body that will replace the current body.
-      const { data: { name, price, description, image_url } = {} } = req.body;
+      const { name, price, description, image_url } = res.locals.dishIsValid;
       //console.log({ data: { name, price, description, image_url } });
       // Replacing the old body with new body.
       foundDishId.name = name;
